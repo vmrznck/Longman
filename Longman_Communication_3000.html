@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Longman 3000 測驗版</title>
+    <title>Longman 3000 測驗版 (手機優化版)</title>
     <style>
         :root { --primary: #1a73e8; --bg: #f8f9fa; --text: #202124; --accent: #34a853; --danger: #d93025; --gray: #eeeeee; --gray-hover: #cccccc; }
         body { font-family: 'Segoe UI', 'PingFang TC', sans-serif; max-width: 1200px; margin: 0 auto; padding: 0; background: var(--bg); color: var(--text); line-height: 1.6; }
@@ -11,7 +11,7 @@
         /* 控制列固定在最上方 */
         .nav-container { position: sticky; top: 0; background: white; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 10px 20px; }
         
-        /* 目錄分頁：隨頁面捲動消失 */
+        /* 目錄分頁 */
         .tabs-container { position: relative; z-index: 1000; padding: 10px; }
         .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .tab-btn { padding: 8px 12px; border: 1px solid #ccc; background: white; color: #555; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
@@ -23,26 +23,23 @@
         .mid-group { display: flex; gap: 8px; flex-grow: 1; }
         .right-group { display: flex; gap: 8px; justify-content: flex-end; }
 
-        /* 語速拉桿樣式 */
         .speed-ctrl { display: flex; align-items: center; gap: 8px; margin-left: 10px; padding-left: 15px; border-left: 1px solid #ddd; }
         .speed-ctrl input { cursor: pointer; width: 80px; }
 
         .btn { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: 0.2s; white-space: nowrap; }
         .btn-reset { background: var(--gray); color: #333; }
-        .btn-reset:hover { background: var(--gray-hover); }
         .btn-toggle-cn { background: var(--gray); color: #333; }
         .btn-toggle-cn.active { background: var(--accent); color: white; }
         .btn-quiz { background: #f29900; color: white; }
         .btn-stats { background: #673ab7; color: white; }
 
-        /* 測驗遮罩：置中佈局 */
+        /* 測驗遮罩 */
         #quizOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(255,255,255,0.98); z-index: 2000; display: none; 
             flex-direction: column; align-items: center; justify-content: center; 
         }
         
-        /* 統計畫面：修復捲動 */
         #statsOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: white; z-index: 2000; display: none; 
@@ -63,8 +60,58 @@
 
         .stats-table { width: 90%; max-width: 700px; border-collapse: collapse; margin-top: 20px; background: white; }
         .stats-table th, .stats-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        .err-count { color: var(--danger); font-weight: bold; }
         .close-btn { position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #333; color: white; border-radius: 5px; cursor: pointer; z-index: 2001; }
+
+        /* ==========================================
+           手機版優化版面 (Mobile Optimization)
+           ========================================== */
+        @media screen and (max-width: 768px) {
+            .nav-container { padding: 8px 12px; }
+            .header-info { flex-direction: column; align-items: stretch; gap: 8px; }
+            
+            /* 左側群組：待複習、已學會、語速 */
+            .left-group { 
+                min-width: unset; 
+                justify-content: space-between; 
+                font-size: 0.8em; 
+                border-bottom: 1px solid #eee; 
+                padding-bottom: 5px; 
+            }
+            .speed-ctrl { margin-left: 0; padding-left: 5px; border-left: none; }
+            .speed-ctrl input { width: 70px; }
+
+            /* 中間與右側按鈕群組：改為並排平分空間 */
+            .mid-group, .right-group { 
+                justify-content: space-between; 
+                gap: 5px; 
+            }
+            .btn { 
+                flex: 1; 
+                padding: 10px 4px; 
+                font-size: 0.8em; 
+                text-align: center;
+                white-space: normal; /* 容許文字較長時換行 */
+            }
+
+            /* 單字網格：在手機上一列一個 */
+            .word-grid { 
+                grid-template-columns: 1fr; 
+                gap: 10px; 
+            }
+            .main-content { padding: 12px; }
+            .word-card { padding: 12px; }
+
+            /* 測驗畫面調整 */
+            .quiz-options { gap: 40px; margin-top: 30px; }
+            .opt-label { font-size: 1.25em; }
+            .opt-label input { width: 40px; height: 40px; } /* 加大按鈕好點選 */
+
+            /* 統計表格調整 */
+            .stats-table { width: 100%; font-size: 0.85em; }
+            .stats-table th, .stats-table td { padding: 10px 4px; }
+            
+            .close-btn { top: 10px; right: 10px; padding: 8px 15px; }
+        }
     </style>
 </head>
 <body>
@@ -77,7 +124,7 @@
             <div class="speed-ctrl">
                 <span>語速:</span>
                 <input type="range" id="speedInput" min="0.5" max="1.5" step="0.1" value="0.8" oninput="document.getElementById('speedVal').textContent = this.value">
-                <span id="speedVal" style="min-width: 25px;">0.8</span>
+                <span id="speedVal" style="min-width: 20px;">0.8</span>
             </div>
         </div>
         <div class="mid-group">
@@ -88,7 +135,6 @@
             <button onclick="startQuiz('word')" class="btn btn-quiz">單字測驗</button>
             <button onclick="startQuiz('audio')" class="btn btn-quiz">聽力測驗</button>
             <button onclick="showStats()" class="btn btn-stats">測驗統計</button>
-
         </div>
     </div>
 </div>
@@ -112,8 +158,8 @@
 <div id="statsOverlay">
     <div class="close-btn" onclick="document.getElementById('statsOverlay').style.display='none'">關閉統計</div>
     <div class="stats-content-wrapper">
-          <button onclick="resetQuizStats()" class="btn btn-reset">重置測驗統計</button>
-        <h2 style="margin-top: 40px;">本頁測驗統計 (依錯誤次數排序)</h2>
+        <button onclick="resetQuizStats()" class="btn btn-reset" style="margin-top:20px">重置測驗統計</button>
+        <h2 style="margin: 30px 0 10px;">本頁測驗統計</h2>
         <table class="stats-table">
             <thead>
                 <tr><th>單字</th><th>正確</th><th>錯誤</th><th>答對率</th></tr>
@@ -124,7 +170,8 @@
 </div>
 
 <script>
-    // 資料內容範例 (請在此補回您的完整 Part 1 ~ 7 資料)
+    // 此處請保留您原始檔案中完整的 allParts 資料 (包含 Part 1 ~ 7)
+    // 為了縮短回覆長度，下方僅放範例結構
     const allParts = [
         { name: "Part 1 (A-B)", storageKey: "longman_p1", data: [
 {en: "abandon", cn: "放棄"}, {en: "ability", cn: "能力"},
@@ -1176,7 +1223,7 @@
 {en: "your", cn: "你的"}, {en: "yours", cn: "你的(代名詞)"}, {en: "yourself", cn: "你自己"},
 {en: "youth", cn: "青春/青少年"}, {en: "zero", cn: "零"}, {en: "zone", cn: "區域"}
         ]}
-     ];
+     ];	
 
     let currentTabIndex = 0;
     let wordData = [];
@@ -1335,5 +1382,6 @@
 
     loadData();
 </script>
+
 </body>
 </html>
